@@ -27,14 +27,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class MainActivity extends AppCompatActivity {
+public class Answers extends AppCompatActivity {
 
-    EditText question, answer, email;
-    Button insert, show, back;
+    Button show, back;
     RequestQueue requestQueue;
-    String insertUrl = "http://192.168.0.10/insertStudent.php";
     String showUrl = "http://192.168.0.10/showStudents.php";
-    TextView result;
+    TextView resultt;
     private Button log_out;
 
 
@@ -43,20 +41,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_answers);
 
 
-        question = (EditText) findViewById(R.id.editText5);
-        answer = (EditText) findViewById(R.id.editText6);
-        email = (EditText) findViewById(R.id.editText7);
-        insert = (Button) findViewById(R.id.insert);
         show = (Button) findViewById(R.id.showstudents);
-        result = (TextView) findViewById(R.id.textView);
-
-        SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
-        String name = sharedPref.getString("email", "hi");
-        email.setText(name);
-
+        resultt = (TextView) findViewById(R.id.result);
 
 
         log_out = (Button) findViewById(R.id.button);
@@ -81,17 +70,19 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         System.out.println(response.toString());
                         try {
-                            JSONArray students = response.getJSONArray("students");
-                            for (int i = 0; i < students.length(); i++) {
-                                JSONObject student = students.getJSONObject(i);
+                            JSONArray result = response.getJSONArray("result");
+                            for (int i = 0; i < result.length(); i++) {
+                                JSONObject results = result.getJSONObject(i);
 
-                                String firstname = student.getString("firstname");
-                                String lastname = student.getString("lastname");
-                                String age = student.getString("age");
+                                String Q1 = results.getString("Q1");
+                                String Q2 = results.getString("Q2");
+                                String Q3 = results.getString("Q3");
+                                String Q4 = results.getString("Q4");
 
-                                result.append(firstname + " " + lastname + " " + age + " \n");
+                                resultt.append(" \n"+ " Q1 = "+ Q1 + " \n " + "Q2 = "+ Q2 + " \n " +"Q3 = " + Q3 + " \n " +
+                                        "Q4 = " + Q4 + " \n");
                             }
-                            result.append("===\n");
+                            resultt.append("===\n");
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -108,37 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 });
                 requestQueue.add(jsonObjectRequest);
             }
-        });
-
-        insert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StringRequest request = new StringRequest(Request.Method.POST, insertUrl, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        System.out.println(response.toString());
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }) {
-
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> parameters  = new HashMap<String, String>();
-                        parameters.put("question",question.getText().toString());
-                        parameters.put("answer",answer.getText().toString());
-                        parameters.put("email",email.getText().toString());
-
-                        return parameters;
-                    }
-                };
-                requestQueue.add(request);
-            }
-
         });
 
         back = (Button) findViewById(R.id.back);

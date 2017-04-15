@@ -7,11 +7,12 @@ function createStudent()
 {
 	global $connect;
 	
-	$question = $_POST["question"];	
-	$answer = $_POST["answer"];
-	$email = $_POST["email"];
+	$Q1 = $_POST["Q1"];	
+	$Q2 = $_POST["Q2"];
+	$Q3 = $_POST["Q3"];
+	$Q4 = $_POST["Q4"];
 	
-	$query = " REPLACE into students(question,answer,email) values ('$question','$answer','$email');";
+	$query = " REPLACE into answers(Q1,Q2,Q3,Q4) values ('$Q1','$Q2','$Q3','$Q4');";
 	
 	mysqli_query($connect, $query) or die (mysqli_error($connect));
 	mysqli_close($connect);
